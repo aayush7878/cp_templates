@@ -1,0 +1,13 @@
+#define MAX 10000001
+
+vector<int> Prime(MAX, 1);
+void sieve(){
+    Prime[0] = Prime[1] = 0;
+    for(int i=2;i<MAX;i++){
+        if(Prime[i]==1){
+            for(int j=i*i;j<MAX && j>0;j+=i){
+                Prime[j] = 0;
+            }
+        }
+    }
+}
