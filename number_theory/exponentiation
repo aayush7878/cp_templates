@@ -1,0 +1,9 @@
+ll power(ll x, ll y){
+    if (y == 0) return 1;
+ 
+    ll ans = power(x, y / 2);
+    ans = 1ll * ans * ans;
+ 
+    if (y & 1ll) return 1ll * ans * x;
+    else return ans;
+}
