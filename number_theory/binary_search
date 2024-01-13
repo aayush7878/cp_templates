@@ -1,0 +1,17 @@
+ll l = left;
+ll r = right;
+ll ans = -1;
+while(r >= l){
+  ll m = (l+r)/2;
+
+  if(m == k){
+      ans = m;
+      break;
+  }
+  else if(m < k){
+      l = m+1;
+  }
+  else{
+      r = m-1;
+  }
+}
