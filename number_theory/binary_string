@@ -4,6 +4,6 @@ string to_binary(ll x) {
 		s += (x % 2 ? '1' : '0');
 		x /= 2;
 	}
-	rsort(s);
+	reverse(s.begin(), s.end());
 	return s;
 }
