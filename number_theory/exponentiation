@@ -5,7 +5,7 @@ ll binpow(ll a, ll b){
             res = res * a;
         }
         a = a * a;
-        b >>=1;
+        b >>= 1;
     }
     return res;
 }
