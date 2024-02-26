@@ -1,4 +1,4 @@
-string to_binary(ll x) {
+string to_binary(int x) {
 	string s;
 	while(x > 0) {
 		s += (x % 2 ? '1' : '0');
