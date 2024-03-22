@@ -1,0 +1,47 @@
+int expo(int a, int b, int mod) {int res = 1; while (b > 0) {if (b & 1)res = (res * a) % mod; a = (a * a) % mod; b = b >> 1;} return res;}
+int mminvprime(int a, int b) {return expo(a, b - 2, b);}
+int mod_mul(int a, int b, int m) {a = a % m; b = b % m; return (((a * b) % m) + m) % m;}
+int mod_sub(int a, int b, int m) {a = a % m; b = b % m; return (((a - b) % m) + m) % m;}
+ 
+struct Hashing{
+    string s;
+    int p = 31;
+    int m = 1e9 + 7;
+    int n;
+    vector<int> prefixHash;
+    vector<int> powersOfP;
+    vector<int> inversePowersOfP;
+    Hashing(string queryString){
+        s = queryString;
+        n = s.size();
+        prefixHash.resize(n);
+        powersOfP.resize(n);
+        inversePowersOfP.resize(n);
+        calculatePowersAndInversePowersOfP();
+        calculatePrefixHashes();
+    }
+    void calculatePowersAndInversePowersOfP(){
+        int currentPower = 1;
+        for(int i = 0; i < n; i++){
+            powersOfP[i] = currentPower;
+            currentPower = (currentPower * p) % m;
+        }
+        inversePowersOfP[n - 1] = mminvprime(powersOfP[n - 1], m);
+        for(int i = n - 2; i >= 0; i--){
+            inversePowersOfP[i] = (inversePowersOfP[i + 1] * p) % m;
+        }
+    }
+    void calculatePrefixHashes(){
+        int hashSoFar = 0;
+        for(int i = 0; i < n; i++){
+            hashSoFar = (hashSoFar + (s[i] - 'a' + 1) * powersOfP[i]) % m;
+            prefixHash[i] = hashSoFar;
+        }
+    }
+    
+    int substringHash(int l, int r){ 
+        int val1 = prefixHash[r];
+        int val2 = l > 0 ? prefixHash[l - 1] : 0LL;
+        return ((val1 - val2 + m) * inversePowersOfP[l]) % m;
+    }
+};
