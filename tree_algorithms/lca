@@ -1,0 +1,78 @@
+void dfs(int curr, vector<vector<int>> &edges, int parent, vector<vector<int>> &v, vector<int> &level){
+ 
+    v[0][curr] = parent; 
+    if(parent != -1) level[curr] = level[parent] + 1;
+ 
+    for(auto &neighbours : edges[curr]){
+        if(neighbours != parent){
+            dfs(neighbours , edges, curr, v, level);
+        }
+    }
+}
+
+int kthParent(int n, int k, vector<vector<int>> &v, int totalNodes){
+    int a = n;
+    for(int i=0; i<log2(totalNodes); ++i){
+        if(a == -1) return -1;
+        if((k&1) == 1) a = v[i][a];
+        k = k>>1;
+    }
+    return a;
+}
+
+int lca(int a, int b, vector<vector<int>> &v, vector<int> &level, int n){
+    if(level[b] > level[a]){
+        swap(a, b);
+    }
+    int k = level[a] - level[b];
+    a = kthParent(a, k, v, n);
+    if(a == b){
+        return (a+1);
+    }
+
+    int m = log2(n) + 1;
+    for(int i=m-1; i>=0; --i){
+        int parentOfA = v[i][a];
+        int parentOfB = v[i][b];
+        if(parentOfA != parentOfB){
+            a = parentOfA;
+            b = parentOfB;
+        }
+    }
+
+    int ans = v[0][a]+1;
+    return ans;
+}
+ 
+void UwU(){
+    int n, q; cin>>n>>q;
+    vector<vector<int>> edges(n, vector<int>());
+ 
+    for(int i=1; i<n; ++i){
+        int a; cin>>a;
+        a--;
+        edges[a].push_back(i);
+        edges[i].push_back(a);
+    }
+ 
+    int root = 0;
+    int m = log2(n) + 1;
+    vector<vector<int>> v(m, vector<int> (n, 0));
+    vector<int> level(n, 0);
+ 
+    dfs(root, edges, -1, v, level);
+ 
+    for(int i=1; i<m; ++i){
+        for(int j=0; j<n; ++j){
+            if(v[i-1][j] == -1) v[i][j] = -1;
+            else v[i][j] = v[i-1][v[i-1][j]];
+        }
+    }
+ 
+    for(int i=0; i<q; ++i){
+        int a, b; cin>>a>>b;
+        a--; b--;
+        cout<<lca(a, b, v, level, n)<<"\n";
+    }
+ 
+}
